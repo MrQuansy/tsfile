@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static org.apache.tsfile.utils.RamUsageEstimator.shallowSizeOfInstance;
+import static org.apache.tsfile.utils.RamUsageEstimator.sizeOf;
 /**
  * This class represents a pooled binary object for application layer. It is designed to improve
  * allocation performance and reduce GC overhead by reusing binary objects from a pool instead of
@@ -29,8 +31,9 @@ import java.nio.charset.StandardCharsets;
  * length of the underlying byte array. Always use getLength() instead of getValue().length to get
  * the correct length.
  */
-public class PooledBinary implements Comparable<PooledBinary>, Serializable {
+public class PooledBinary implements Comparable<PooledBinary>, Serializable, Accountable {
 
+  private static final long INSTANCE_SIZE = shallowSizeOfInstance(PooledBinary.class);
   private static final long serialVersionUID = 6394197743397020735L;
   public static final PooledBinary EMPTY_VALUE = new PooledBinary(new byte[0]);
 
@@ -158,5 +161,10 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable {
 
   public int getArenaIndex() {
     return this.arenaIndex;
+  }
+
+  @Override
+  public long ramBytesUsed() {
+    return INSTANCE_SIZE + sizeOf(values);
   }
 }
