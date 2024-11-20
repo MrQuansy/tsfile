@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.apache.tsfile.utils.RamUsageEstimator.shallowSizeOfInstance;
 import static org.apache.tsfile.utils.RamUsageEstimator.sizeOf;
+
 /**
  * This class represents a pooled binary object for application layer. It is designed to improve
  * allocation performance and reduce GC overhead by reusing binary objects from a pool instead of
