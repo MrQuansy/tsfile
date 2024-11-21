@@ -18,8 +18,6 @@
  */
 package org.apache.tsfile.utils;
 
-import jdk.internal.util.ArraysSupport;
-
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -105,8 +103,16 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
       return false;
     }
 
-    return ArraysSupport.mismatch(binary.getValues(), 0, otherBinary.binary.getValues(), 0, length)
-        == -1;
+    byte[] v0 = binary.getValues();
+    byte[] v1 = otherBinary.binary.getValues();
+
+    for (int i = 0; i < length; i++) {
+      if (v0[i] != v1[i]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @Override
