@@ -18,6 +18,8 @@
  */
 package org.apache.tsfile.utils;
 
+import jdk.internal.util.ArraysSupport;
+
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +39,7 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
   private static final long serialVersionUID = 6394197743397020735L;
   public static final PooledBinary EMPTY_VALUE = new PooledBinary(new byte[0]);
 
-  private Binary values;
+  private Binary binary;
 
   private int length;
 
@@ -45,17 +47,17 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
 
   /** if the bytes v is modified, the modification is visible to this binary. */
   public PooledBinary(byte[] v) {
-    this.values = new Binary(v);
-    this.length = values.getLength();
+    this.binary = new Binary(v);
+    this.length = binary.getLength();
   }
 
   public PooledBinary(String s, Charset charset) {
-    this.values = new Binary(s, charset);
-    this.length = values.getLength();
+    this.binary = new Binary(s, charset);
+    this.length = binary.getLength();
   }
 
   public PooledBinary(byte[] v, int length, int arenaIndex) {
-    this.values = new Binary(v);
+    this.binary = new Binary(v);
     this.length = length;
     this.arenaIndex = arenaIndex;
   }
@@ -63,7 +65,7 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
   @Override
   public int compareTo(PooledBinary other) {
     if (other == null) {
-      if (this.values == null) {
+      if (this.binary.getValues() == null) {
         return 0;
       } else {
         return 1;
@@ -74,8 +76,8 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
     int len1 = getLength();
     int len2 = other.getLength();
     int lim = Math.min(len1, len2);
-    byte[] v0 = this.values.getValues();
-    byte[] v1 = other.values.getValues();
+    byte[] v0 = this.binary.getValues();
+    byte[] v1 = other.binary.getValues();
     for (int k = 0; k < lim; k++) {
       if (v0[k] != v1[k]) {
         return getChar(v0, k) - getChar(v1, k);
@@ -97,35 +99,26 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PooledBinary binary = (PooledBinary) o;
+    PooledBinary otherBinary = (PooledBinary) o;
 
-    if (length != binary.getLength()) {
+    if (length != otherBinary.length) {
       return false;
     }
-    for (int i = 0; i < length; i++) {
-      if (this.values.getValues()[i] != binary.values.getValues()[i]) {
-        return false;
-      }
-    }
-    return true;
+
+    return ArraysSupport.mismatch(binary.getValues(), 0, otherBinary.binary.getValues(), 0, length)
+        == -1;
   }
 
   @Override
   public int hashCode() {
-    if (values.getValues() == null) {
-      return 0;
-    } else {
-      int result = 1;
-      byte[] var2 = values.getValues();
-      int var3 = length;
+    // copied from Arrays.hashCode
+    if (binary.getValues() == null) return 0;
 
-      for (int var4 = 0; var4 < var3; ++var4) {
-        byte element = var2[var4];
-        result = 31 * result + element;
-      }
+    int result = 1;
+    byte[] val = binary.getValues();
+    for (int i = 0; i < length; i++) result = 31 * result + val[i];
 
-      return result;
-    }
+    return result;
   }
 
   /**
@@ -138,7 +131,7 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
   }
 
   public String getStringValue(Charset charset) {
-    return new String(this.values.getValues(), 0, length, charset);
+    return new String(this.binary.getValues(), 0, length, charset);
   }
 
   @Override
@@ -148,16 +141,16 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
   }
 
   public byte[] getValues() {
-    return values.getValues();
+    return binary.getValues();
   }
 
   public void setValues(byte[] values) {
-    this.values.setValues(values);
-    this.length = this.values.getLength();
+    this.binary.setValues(values);
+    this.length = this.binary.getLength();
   }
 
   public void setValues(byte[] values, int length) {
-    this.values.setValues(values);
+    this.binary.setValues(values);
     this.length = length;
   }
 
@@ -167,10 +160,10 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
 
   @Override
   public long ramBytesUsed() {
-    return INSTANCE_SIZE + values.ramBytesUsed();
+    return INSTANCE_SIZE + binary.ramBytesUsed();
   }
 
   public Binary toBinary() {
-    return values;
+    return binary;
   }
 }
