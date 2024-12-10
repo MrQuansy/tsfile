@@ -31,7 +31,7 @@ import org.apache.tsfile.read.common.block.column.FloatColumn;
 import org.apache.tsfile.read.common.block.column.IntColumn;
 import org.apache.tsfile.read.common.block.column.LongColumn;
 import org.apache.tsfile.read.common.block.column.RunLengthEncodedColumn;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -157,12 +157,12 @@ public class TsBlockTest {
   @Test
   public void testBinaryTsBlock() {
     long[] timeArray = {1L, 2L, 3L, 4L, 5L};
-    Binary[] valueArray = {
-      new Binary("10", TSFileConfig.STRING_CHARSET),
-      new Binary("20", TSFileConfig.STRING_CHARSET),
-      new Binary("30", TSFileConfig.STRING_CHARSET),
-      new Binary("40", TSFileConfig.STRING_CHARSET),
-      new Binary("50", TSFileConfig.STRING_CHARSET)
+    PoolBinary[] valueArray = {
+      new PoolBinary("10", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("20", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("30", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("40", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("50", TSFileConfig.STRING_CHARSET)
     };
     TsBlockBuilder builder = new TsBlockBuilder(Collections.singletonList(TSDataType.TEXT));
     for (int i = 0; i < timeArray.length; i++) {
@@ -242,12 +242,12 @@ public class TsBlockTest {
     boolean[] floatIsNull = {false, false, true, true, false};
     double[] doubleValueArray = {10000.0, 20000.0, 30000.0, 40000.0, 50000.0};
     boolean[] doubleIsNull = {true, false, false, true, false};
-    Binary[] binaryValueArray = {
-      new Binary("19970909", TSFileConfig.STRING_CHARSET),
-      new Binary("ty", TSFileConfig.STRING_CHARSET),
-      new Binary("love", TSFileConfig.STRING_CHARSET),
-      new Binary("zm", TSFileConfig.STRING_CHARSET),
-      new Binary("19950421", TSFileConfig.STRING_CHARSET)
+    PoolBinary[] binaryValueArray = {
+      new PoolBinary("19970909", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("ty", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("love", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("zm", TSFileConfig.STRING_CHARSET),
+      new PoolBinary("19950421", TSFileConfig.STRING_CHARSET)
     };
     boolean[] binaryIsNull = {false, false, false, false, false};
 

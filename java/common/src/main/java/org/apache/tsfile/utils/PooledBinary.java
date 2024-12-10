@@ -37,7 +37,7 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
   private static final long serialVersionUID = 6394197743397020735L;
   public static final PooledBinary EMPTY_VALUE = new PooledBinary(new byte[0]);
 
-  private Binary binary;
+  private PoolBinary binary;
 
   private int length;
 
@@ -45,17 +45,17 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
 
   /** if the bytes v is modified, the modification is visible to this binary. */
   public PooledBinary(byte[] v) {
-    this.binary = new Binary(v);
+    this.binary = new PoolBinary(v);
     this.length = binary.getLength();
   }
 
   public PooledBinary(String s, Charset charset) {
-    this.binary = new Binary(s, charset);
+    this.binary = new PoolBinary(s, charset);
     this.length = binary.getLength();
   }
 
   public PooledBinary(byte[] v, int length, int arenaIndex) {
-    this.binary = new Binary(v);
+    this.binary = new PoolBinary(v);
     this.length = length;
     this.arenaIndex = arenaIndex;
   }
@@ -169,7 +169,7 @@ public class PooledBinary implements Comparable<PooledBinary>, Serializable, Acc
     return INSTANCE_SIZE + binary.ramBytesUsed();
   }
 
-  public Binary toBinary() {
+  public PoolBinary toBinary() {
     return binary;
   }
 }

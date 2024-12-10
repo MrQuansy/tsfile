@@ -31,8 +31,8 @@ import org.apache.tsfile.file.metadata.TimeseriesMetadata;
 import org.apache.tsfile.file.metadata.enums.CompressionType;
 import org.apache.tsfile.file.metadata.enums.TSEncoding;
 import org.apache.tsfile.read.common.Path;
-import org.apache.tsfile.utils.Binary;
 import org.apache.tsfile.utils.Pair;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.TsPrimitiveType;
 import org.apache.tsfile.write.TsFileIntegrityCheckingTool;
 import org.apache.tsfile.write.chunk.AlignedChunkWriterImpl;
@@ -1294,7 +1294,8 @@ public class TsFileIOWriterMemoryControlTest {
           case 5:
             points[j] =
                 new TsPrimitiveType.TsBinary(
-                    new Binary(String.valueOf(random.nextDouble()), TSFileConfig.STRING_CHARSET));
+                    new PoolBinary(
+                        String.valueOf(random.nextDouble()), TSFileConfig.STRING_CHARSET));
             break;
         }
       }
@@ -1312,7 +1313,8 @@ public class TsFileIOWriterMemoryControlTest {
         new ChunkWriterImpl(new MeasurementSchema(sortedSeriesId.get(idx), TSDataType.TEXT));
     Random random = new Random();
     for (long i = startTime; i < startTime + TEST_CHUNK_SIZE; ++i) {
-      Binary val = new Binary(String.valueOf(random.nextDouble()), TSFileConfig.STRING_CHARSET);
+      PoolBinary val =
+          new PoolBinary(String.valueOf(random.nextDouble()), TSFileConfig.STRING_CHARSET);
       chunkWriter.write(i, val);
       record.add(new Pair<>(i, new TsPrimitiveType.TsBinary(val)));
     }

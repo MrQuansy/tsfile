@@ -928,8 +928,8 @@ public class BytesUtils {
     return s;
   }
 
-  public static Binary valueOf(String value) {
-    return new Binary(stringToBytes(value));
+  public static PoolBinary valueOf(String value) {
+    return new PoolBinary(stringToBytes(value));
   }
 
   public static String parseBlobByteArrayToString(byte[] input) {

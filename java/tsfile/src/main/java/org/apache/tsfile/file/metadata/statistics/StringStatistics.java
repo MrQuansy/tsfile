@@ -22,7 +22,7 @@ package org.apache.tsfile.file.metadata.statistics;
 import org.apache.tsfile.common.conf.TSFileConfig;
 import org.apache.tsfile.enums.TSDataType;
 import org.apache.tsfile.exception.filter.StatisticsClassException;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.RamUsageEstimator;
 import org.apache.tsfile.utils.ReadWriteIOUtils;
 
@@ -34,17 +34,17 @@ import java.util.Objects;
 
 import static org.apache.tsfile.utils.RamUsageEstimator.sizeOfCharArray;
 
-public class StringStatistics extends Statistics<Binary> {
+public class StringStatistics extends Statistics<PoolBinary> {
   public static final long INSTANCE_SIZE =
       RamUsageEstimator.shallowSizeOfInstance(StringStatistics.class)
-          + 4 * RamUsageEstimator.shallowSizeOfInstance(Binary.class);
+          + 4 * RamUsageEstimator.shallowSizeOfInstance(PoolBinary.class);
 
-  private static final Binary EMPTY_VALUE = new Binary("", TSFileConfig.STRING_CHARSET);
+  private static final PoolBinary EMPTY_VALUE = new PoolBinary("", TSFileConfig.STRING_CHARSET);
 
-  private Binary firstValue = EMPTY_VALUE;
-  private Binary lastValue = EMPTY_VALUE;
-  private Binary minValue = EMPTY_VALUE;
-  private Binary maxValue = EMPTY_VALUE;
+  private PoolBinary firstValue = EMPTY_VALUE;
+  private PoolBinary lastValue = EMPTY_VALUE;
+  private PoolBinary minValue = EMPTY_VALUE;
+  private PoolBinary maxValue = EMPTY_VALUE;
 
   @Override
   public TSDataType getType() {
@@ -70,14 +70,14 @@ public class StringStatistics extends Statistics<Binary> {
         + sizeOfCharArray(maxValue.getLength());
   }
 
-  public void initializeStats(Binary first, Binary last, Binary min, Binary max) {
+  public void initializeStats(PoolBinary first, PoolBinary last, PoolBinary min, PoolBinary max) {
     this.firstValue = first;
     this.lastValue = last;
     this.minValue = min;
     this.maxValue = max;
   }
 
-  private void updateStats(Binary minValue, Binary maxValue, Binary lastValue) {
+  private void updateStats(PoolBinary minValue, PoolBinary maxValue, PoolBinary lastValue) {
     if (this.minValue.compareTo(minValue) > 0) {
       this.minValue = minValue;
     }
@@ -88,10 +88,10 @@ public class StringStatistics extends Statistics<Binary> {
   }
 
   private void updateStats(
-      Binary firstValue,
-      Binary lastValue,
-      Binary minValue,
-      Binary maxValue,
+      PoolBinary firstValue,
+      PoolBinary lastValue,
+      PoolBinary minValue,
+      PoolBinary maxValue,
       long startTime,
       long endTime) {
     // only if endTime greater or equals to the current endTime need we update the last value
@@ -112,22 +112,22 @@ public class StringStatistics extends Statistics<Binary> {
   }
 
   @Override
-  public Binary getMinValue() {
+  public PoolBinary getMinValue() {
     return minValue;
   }
 
   @Override
-  public Binary getMaxValue() {
+  public PoolBinary getMaxValue() {
     return maxValue;
   }
 
   @Override
-  public Binary getFirstValue() {
+  public PoolBinary getFirstValue() {
     return firstValue;
   }
 
   @Override
-  public Binary getLastValue() {
+  public PoolBinary getLastValue() {
     return lastValue;
   }
 
@@ -144,7 +144,7 @@ public class StringStatistics extends Statistics<Binary> {
   }
 
   @Override
-  protected void mergeStatisticsValue(Statistics<Binary> stats) {
+  protected void mergeStatisticsValue(Statistics<PoolBinary> stats) {
     StringStatistics stringStats = (StringStatistics) stats;
     if (isEmpty) {
       initializeStats(
@@ -165,7 +165,7 @@ public class StringStatistics extends Statistics<Binary> {
   }
 
   @Override
-  void updateStats(Binary value) {
+  void updateStats(PoolBinary value) {
     if (isEmpty) {
       initializeStats(value, value, value, value);
       isEmpty = false;
@@ -175,7 +175,7 @@ public class StringStatistics extends Statistics<Binary> {
   }
 
   @Override
-  void updateStats(Binary[] values, int batchSize) {
+  void updateStats(PoolBinary[] values, int batchSize) {
     for (int i = 0; i < batchSize; i++) {
       updateStats(values[i]);
     }

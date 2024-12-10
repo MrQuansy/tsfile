@@ -24,7 +24,7 @@ import org.apache.tsfile.enums.TSDataType;
 import org.apache.tsfile.read.common.Field;
 import org.apache.tsfile.read.common.Path;
 import org.apache.tsfile.read.common.RowRecord;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -146,13 +146,13 @@ public class ResultSet {
   }
 
   @TsFileApi
-  public Binary getBinary(String columnName) {
+  public PoolBinary getBinary(String columnName) {
     Integer columnIndex = columnNameToColumnIndexMap.get(columnName);
     return getBinary(columnIndex);
   }
 
   @TsFileApi
-  public Binary getBinary(int columnIndex) {
+  public PoolBinary getBinary(int columnIndex) {
     return getField(columnIndex).getBinaryV();
   }
 

@@ -35,7 +35,7 @@ import org.apache.tsfile.read.common.Chunk;
 import org.apache.tsfile.read.common.Path;
 import org.apache.tsfile.read.expression.QueryExpression;
 import org.apache.tsfile.read.query.dataset.QueryDataSet;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.TsFileGeneratorUtils;
 import org.apache.tsfile.write.chunk.AlignedChunkWriterImpl;
 import org.apache.tsfile.write.chunk.ChunkWriterImpl;
@@ -376,8 +376,8 @@ public class TsFileWriteApiTest {
             tablet.bitMaps[i].mark((int) r % tablet.getMaxRowNumber());
             continue;
           }
-          Binary[] textSensor = (Binary[]) values[i];
-          textSensor[row] = new Binary("testString.........", TSFileConfig.STRING_CHARSET);
+          PoolBinary[] textSensor = (PoolBinary[]) values[i];
+          textSensor[row] = new PoolBinary("testString.........", TSFileConfig.STRING_CHARSET);
         }
         if (r > 1000) {
           tablet.bitMaps[sensorNum - 1].mark((int) r % tablet.getMaxRowNumber());
@@ -429,8 +429,8 @@ public class TsFileWriteApiTest {
             tablet.bitMaps[i].mark((int) r % tablet.getMaxRowNumber());
             continue;
           }
-          Binary[] textSensor = (Binary[]) values[i];
-          textSensor[row] = new Binary("testString.........", TSFileConfig.STRING_CHARSET);
+          PoolBinary[] textSensor = (PoolBinary[]) values[i];
+          textSensor[row] = new PoolBinary("testString.........", TSFileConfig.STRING_CHARSET);
         }
         if (r > 1000) {
           tablet.bitMaps[sensorNum - 1].mark((int) r % tablet.getMaxRowNumber());
@@ -483,8 +483,8 @@ public class TsFileWriteApiTest {
             tablet.bitMaps[i].mark((int) r % tablet.getMaxRowNumber());
             continue;
           }
-          Binary[] textSensor = (Binary[]) values[i];
-          textSensor[row] = new Binary("testString.........", TSFileConfig.STRING_CHARSET);
+          PoolBinary[] textSensor = (PoolBinary[]) values[i];
+          textSensor[row] = new PoolBinary("testString.........", TSFileConfig.STRING_CHARSET);
         }
         if (r > 1000) {
           tablet.bitMaps[sensorNum - 1].mark((int) r % tablet.getMaxRowNumber());
@@ -536,8 +536,8 @@ public class TsFileWriteApiTest {
             tablet.bitMaps[i].mark((int) r % tablet.getMaxRowNumber());
             continue;
           }
-          Binary[] textSensor = (Binary[]) values[i];
-          textSensor[row] = new Binary("testString.........", TSFileConfig.STRING_CHARSET);
+          PoolBinary[] textSensor = (PoolBinary[]) values[i];
+          textSensor[row] = new PoolBinary("testString.........", TSFileConfig.STRING_CHARSET);
         }
         if (r > 1000) {
           tablet.bitMaps[sensorNum - 1].mark((int) r % tablet.getMaxRowNumber());

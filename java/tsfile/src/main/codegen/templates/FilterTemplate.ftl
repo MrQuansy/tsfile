@@ -23,8 +23,8 @@ import static org.apache.tsfile.utils.ReadWriteIOUtils.ClassSerializeId.${filter
 
 import org.apache.tsfile.block.column.Column;
 import org.apache.tsfile.read.common.block.TsBlock;
-<#if filter.dataType == "Binary">
-import org.apache.tsfile.utils.Binary;
+<#if filter.dataType == "PoolBinary">
+import org.apache.tsfile.utils.PoolBinary;
 </#if>
 import org.apache.tsfile.utils.ReadWriteIOUtils;
 
@@ -51,7 +51,7 @@ public abstract class ${className} extends ValueFilter {
   <#else>
   public boolean satisfy${filter.dataType?cap_first}(long time, ${filter.dataType} value){
   </#if>
-    <#if filter.dataType=="Binary">
+    <#if filter.dataType=="PoolBinary">
     if (value == null) {
       return false;
     }

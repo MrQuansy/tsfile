@@ -29,8 +29,8 @@ import org.apache.tsfile.exception.write.WriteProcessException;
 import org.apache.tsfile.file.metadata.IDeviceID;
 import org.apache.tsfile.file.metadata.enums.CompressionType;
 import org.apache.tsfile.file.metadata.enums.TSEncoding;
-import org.apache.tsfile.utils.Binary;
 import org.apache.tsfile.utils.DateUtils;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.write.UnSupportedDataTypeException;
 import org.apache.tsfile.write.record.Tablet;
 import org.apache.tsfile.write.record.Tablet.ColumnCategory;
@@ -168,7 +168,7 @@ public class AlignedChunkGroupWriterImpl implements IChunkGroupWriter {
         case TEXT:
         case BLOB:
         case STRING:
-          valueChunkWriter.write(time, (Binary) point.getValue(), isNull);
+          valueChunkWriter.write(time, (PoolBinary) point.getValue(), isNull);
           break;
         default:
           throw new UnSupportedDataTypeException(
@@ -255,7 +255,7 @@ public class AlignedChunkGroupWriterImpl implements IChunkGroupWriter {
           case TEXT:
           case BLOB:
           case STRING:
-            valueChunkWriter.write(time, ((Binary[]) tablet.values[columnIndex])[row], isNull);
+            valueChunkWriter.write(time, ((PoolBinary[]) tablet.values[columnIndex])[row], isNull);
             break;
           default:
             throw new UnSupportedDataTypeException(

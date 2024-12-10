@@ -30,25 +30,25 @@ import static org.apache.tsfile.utils.RamUsageEstimator.sizeOf;
  * Override compareTo() and equals() function to Binary class. This class is used to accept Java
  * String type
  */
-public class Binary implements Comparable<Binary>, Serializable, Accountable {
+public class PoolBinary implements Comparable<PoolBinary>, Serializable, Accountable {
 
-  private static final long INSTANCE_SIZE = shallowSizeOfInstance(Binary.class);
+  private static final long INSTANCE_SIZE = shallowSizeOfInstance(PoolBinary.class);
   private static final long serialVersionUID = 6394197743397020735L;
-  public static final Binary EMPTY_VALUE = new Binary(new byte[0]);
+  public static final PoolBinary EMPTY_VALUE = new PoolBinary(new byte[0]);
 
   private byte[] values;
 
   /** if the bytes v is modified, the modification is visible to this binary. */
-  public Binary(byte[] v) {
+  public PoolBinary(byte[] v) {
     this.values = v;
   }
 
-  public Binary(String s, Charset charset) {
+  public PoolBinary(String s, Charset charset) {
     this.values = (s == null) ? null : s.getBytes(charset);
   }
 
   @Override
-  public int compareTo(Binary other) {
+  public int compareTo(PoolBinary other) {
     if (other == null) {
       if (this.values == null) {
         return 0;
@@ -82,7 +82,7 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Binary binary = (Binary) o;
+    PoolBinary binary = (PoolBinary) o;
     return Arrays.equals(values, binary.values);
   }
 

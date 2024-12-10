@@ -25,7 +25,7 @@ import org.apache.tsfile.read.common.block.TsBlock;
 import org.apache.tsfile.read.filter.basic.BinaryLogicalFilter;
 import org.apache.tsfile.read.filter.basic.Filter;
 import org.apache.tsfile.read.filter.basic.OperatorType;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class And extends BinaryLogicalFilter {
   }
 
   @Override
-  public boolean satisfyBinary(long time, Binary value) {
+  public boolean satisfyBinary(long time, PoolBinary value) {
     return left.satisfyBinary(time, value) && right.satisfyBinary(time, value);
   }
 
@@ -108,7 +108,7 @@ public class And extends BinaryLogicalFilter {
   }
 
   @Override
-  public boolean satisfyBinaryRow(long time, Binary[] values) {
+  public boolean satisfyBinaryRow(long time, PoolBinary[] values) {
     return left.satisfyBinaryRow(time, values) && right.satisfyBinaryRow(time, values);
   }
 

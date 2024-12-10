@@ -285,7 +285,7 @@ public class ReadWriteIOUtils {
    *
    * @return The number of bytes used to represent n.
    */
-  public static int write(Binary n, ByteBuffer buffer) {
+  public static int write(PoolBinary n, ByteBuffer buffer) {
     buffer.putInt(n.getLength());
     buffer.put(n.getValues());
     return INT_LEN + n.getLength();
@@ -303,7 +303,7 @@ public class ReadWriteIOUtils {
   }
 
   /** write the size (int) of the binary and then the bytes in binary */
-  public static int write(Binary binary, OutputStream outputStream) throws IOException {
+  public static int write(PoolBinary binary, OutputStream outputStream) throws IOException {
     byte[] size = BytesUtils.intToBytes(binary.getValues().length);
     outputStream.write(size);
     outputStream.write(binary.getValues());
@@ -499,7 +499,7 @@ public class ReadWriteIOUtils {
     return write(n, buffer);
   }
 
-  public static int sizeToWrite(Binary n) {
+  public static int sizeToWrite(PoolBinary n) {
     return INT_LEN + n.getLength();
   }
 
@@ -787,16 +787,16 @@ public class ReadWriteIOUtils {
     return readBytes(inputStream, length);
   }
 
-  public static Binary readBinary(ByteBuffer buffer) {
+  public static PoolBinary readBinary(ByteBuffer buffer) {
     int length = readInt(buffer);
     byte[] bytes = readBytes(buffer, length);
-    return new Binary(bytes);
+    return new PoolBinary(bytes);
   }
 
-  public static Binary readBinary(InputStream inputStream) throws IOException {
+  public static PoolBinary readBinary(InputStream inputStream) throws IOException {
     int length = readInt(inputStream);
     byte[] bytes = readBytes(inputStream, length);
-    return new Binary(bytes);
+    return new PoolBinary(bytes);
   }
 
   /**
@@ -983,12 +983,12 @@ public class ReadWriteIOUtils {
     return set;
   }
 
-  public static Set<Binary> readBinarySet(ByteBuffer buffer) {
+  public static Set<PoolBinary> readBinarySet(ByteBuffer buffer) {
     int size = readInt(buffer);
     if (size <= 0) {
       return Collections.emptySet();
     }
-    Set<Binary> set = new HashSet<>();
+    Set<PoolBinary> set = new HashSet<>();
     for (int i = 0; i < size; i++) {
       set.add(readBinary(buffer));
     }
@@ -1070,10 +1070,10 @@ public class ReadWriteIOUtils {
     }
   }
 
-  public static void writeBinarySet(Set<Binary> set, DataOutputStream outputStream)
+  public static void writeBinarySet(Set<PoolBinary> set, DataOutputStream outputStream)
       throws IOException {
     write(set.contains(null) ? set.size() - 1 : set.size(), outputStream);
-    for (Binary e : set) {
+    for (PoolBinary e : set) {
       if (e != null) {
         write(e, outputStream);
       }
@@ -1160,9 +1160,9 @@ public class ReadWriteIOUtils {
       } else if (value instanceof Float) {
         outputStream.write(FLOAT.ordinal());
         outputStream.writeFloat((Float) value);
-      } else if (value instanceof Binary) {
+      } else if (value instanceof PoolBinary) {
         outputStream.write(BINARY.ordinal());
-        byte[] bytes = ((Binary) value).getValues();
+        byte[] bytes = ((PoolBinary) value).getValues();
         outputStream.writeInt(bytes.length);
         outputStream.write(bytes);
       } else if (value instanceof Boolean) {
@@ -1194,9 +1194,9 @@ public class ReadWriteIOUtils {
     } else if (value instanceof Float) {
       byteBuffer.putInt(FLOAT.ordinal());
       byteBuffer.putFloat((Float) value);
-    } else if (value instanceof Binary) {
+    } else if (value instanceof PoolBinary) {
       byteBuffer.putInt(BINARY.ordinal());
-      byte[] bytes = ((Binary) value).getValues();
+      byte[] bytes = ((PoolBinary) value).getValues();
       byteBuffer.putInt(bytes.length);
       byteBuffer.put(bytes);
     } else if (value instanceof Boolean) {
@@ -1229,7 +1229,7 @@ public class ReadWriteIOUtils {
         int length = buffer.getInt();
         byte[] bytes = new byte[length];
         buffer.get(bytes);
-        return new Binary(bytes);
+        return new PoolBinary(bytes);
       case NULL:
         return null;
       case STRING:

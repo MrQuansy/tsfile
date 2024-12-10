@@ -22,7 +22,7 @@ package org.apache.tsfile.file.metadata.statistics;
 import org.apache.tsfile.common.conf.TSFileConfig;
 import org.apache.tsfile.enums.TSDataType;
 import org.apache.tsfile.exception.filter.StatisticsClassException;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.RamUsageEstimator;
 import org.apache.tsfile.utils.ReadWriteIOUtils;
 
@@ -35,16 +35,16 @@ import java.util.Objects;
 import static org.apache.tsfile.utils.RamUsageEstimator.sizeOfCharArray;
 
 /** Statistics for string type. */
-public class BinaryStatistics extends Statistics<Binary> {
+public class BinaryStatistics extends Statistics<PoolBinary> {
 
   public static final long INSTANCE_SIZE =
       RamUsageEstimator.shallowSizeOfInstance(BinaryStatistics.class)
-          + 2 * RamUsageEstimator.shallowSizeOfInstance(Binary.class);
+          + 2 * RamUsageEstimator.shallowSizeOfInstance(PoolBinary.class);
 
-  private static final Binary EMPTY_VALUE = new Binary("", TSFileConfig.STRING_CHARSET);
+  private static final PoolBinary EMPTY_VALUE = new PoolBinary("", TSFileConfig.STRING_CHARSET);
 
-  private Binary firstValue = EMPTY_VALUE;
-  private Binary lastValue = EMPTY_VALUE;
+  private PoolBinary firstValue = EMPTY_VALUE;
+  private PoolBinary lastValue = EMPTY_VALUE;
 
   @Override
   public TSDataType getType() {
@@ -70,16 +70,17 @@ public class BinaryStatistics extends Statistics<Binary> {
    * @param first the first value
    * @param last the last value
    */
-  public void initializeStats(Binary first, Binary last) {
+  public void initializeStats(PoolBinary first, PoolBinary last) {
     this.firstValue = first;
     this.lastValue = last;
   }
 
-  private void updateLastStats(Binary lastValue) {
+  private void updateLastStats(PoolBinary lastValue) {
     this.lastValue = lastValue;
   }
 
-  private void updateStats(Binary firstValue, Binary lastValue, long startTime, long endTime) {
+  private void updateStats(
+      PoolBinary firstValue, PoolBinary lastValue, long startTime, long endTime) {
     // only if endTime greater or equals to the current endTime need we update the last value
     // only if startTime less or equals to the current startTime need we update the first value
     // otherwise, just ignore
@@ -92,24 +93,24 @@ public class BinaryStatistics extends Statistics<Binary> {
   }
 
   @Override
-  public Binary getMinValue() {
+  public PoolBinary getMinValue() {
     throw new StatisticsClassException(
         String.format(STATS_UNSUPPORTED_MSG, TSDataType.TEXT, "min"));
   }
 
   @Override
-  public Binary getMaxValue() {
+  public PoolBinary getMaxValue() {
     throw new StatisticsClassException(
         String.format(STATS_UNSUPPORTED_MSG, TSDataType.TEXT, "max"));
   }
 
   @Override
-  public Binary getFirstValue() {
+  public PoolBinary getFirstValue() {
     return firstValue;
   }
 
   @Override
-  public Binary getLastValue() {
+  public PoolBinary getLastValue() {
     return lastValue;
   }
 
@@ -126,7 +127,7 @@ public class BinaryStatistics extends Statistics<Binary> {
   }
 
   @Override
-  protected void mergeStatisticsValue(Statistics<Binary> stats) {
+  protected void mergeStatisticsValue(Statistics<PoolBinary> stats) {
     BinaryStatistics stringStats = (BinaryStatistics) stats;
     if (isEmpty) {
       initializeStats(stringStats.getFirstValue(), stringStats.getLastValue());
@@ -141,7 +142,7 @@ public class BinaryStatistics extends Statistics<Binary> {
   }
 
   @Override
-  void updateStats(Binary value) {
+  void updateStats(PoolBinary value) {
     if (isEmpty) {
       initializeStats(value, value);
       isEmpty = false;
@@ -151,7 +152,7 @@ public class BinaryStatistics extends Statistics<Binary> {
   }
 
   @Override
-  void updateStats(Binary[] values, int batchSize) {
+  void updateStats(PoolBinary[] values, int batchSize) {
     for (int i = 0; i < batchSize; i++) {
       updateStats(values[i]);
     }

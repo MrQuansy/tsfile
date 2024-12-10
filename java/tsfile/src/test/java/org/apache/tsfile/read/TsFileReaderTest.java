@@ -42,7 +42,7 @@ import org.apache.tsfile.read.filter.factory.FilterFactory;
 import org.apache.tsfile.read.filter.factory.TimeFilterApi;
 import org.apache.tsfile.read.filter.factory.ValueFilterApi;
 import org.apache.tsfile.read.query.dataset.QueryDataSet;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.TsFileGeneratorForTest;
 import org.apache.tsfile.utils.TsFileGeneratorUtils;
 import org.apache.tsfile.write.TsFileWriter;
@@ -158,7 +158,7 @@ public class TsFileReaderTest {
     Filter filter2 =
         ValueFilterApi.gt(
             DEFAULT_MEASUREMENT_INDEX,
-            new Binary("dog", TSFileConfig.STRING_CHARSET),
+            new PoolBinary("dog", TSFileConfig.STRING_CHARSET),
             TSDataType.TEXT);
     Filter filter3 =
         FilterFactory.and(TimeFilterApi.gtEq(1480562618000L), TimeFilterApi.ltEq(1480562618100L));

@@ -23,7 +23,7 @@ import org.apache.tsfile.common.conf.TSFileConfig;
 import org.apache.tsfile.enums.TSDataType;
 import org.apache.tsfile.exception.encoding.TsFileEncodingException;
 import org.apache.tsfile.file.metadata.enums.TSEncoding;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.ReadWriteForEncodingUtils;
 
 import org.slf4j.Logger;
@@ -87,7 +87,7 @@ public class PlainEncoder extends Encoder {
   }
 
   @Override
-  public void encode(Binary value, ByteArrayOutputStream out) {
+  public void encode(PoolBinary value, ByteArrayOutputStream out) {
     try {
       // write the length of the bytes
       encode(value.getLength(), out);

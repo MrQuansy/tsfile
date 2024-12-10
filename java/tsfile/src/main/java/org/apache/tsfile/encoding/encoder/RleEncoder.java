@@ -23,7 +23,7 @@ import org.apache.tsfile.common.conf.TSFileConfig;
 import org.apache.tsfile.common.conf.TSFileDescriptor;
 import org.apache.tsfile.exception.encoding.TsFileEncodingException;
 import org.apache.tsfile.file.metadata.enums.TSEncoding;
-import org.apache.tsfile.utils.Binary;
+import org.apache.tsfile.utils.PoolBinary;
 import org.apache.tsfile.utils.ReadWriteForEncodingUtils;
 
 import org.slf4j.Logger;
@@ -320,7 +320,7 @@ public abstract class RleEncoder<T extends Comparable<T>> extends Encoder {
   }
 
   @Override
-  public void encode(Binary value, ByteArrayOutputStream out) {
+  public void encode(PoolBinary value, ByteArrayOutputStream out) {
     throw new TsFileEncodingException(getClass().getName());
   }
 
