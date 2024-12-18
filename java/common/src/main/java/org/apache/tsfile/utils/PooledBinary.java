@@ -19,7 +19,6 @@
 package org.apache.tsfile.utils;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import static org.apache.tsfile.utils.RamUsageEstimator.shallowSizeOfInstance;
 import static org.apache.tsfile.utils.RamUsageEstimator.sizeOf;
@@ -104,12 +103,6 @@ public class PooledBinary extends Binary {
   @Override
   public String getStringValue(Charset charset) {
     return new String(values, 0, length, charset);
-  }
-
-  @Override
-  public String toString() {
-    // use UTF_8 by default since toString do not provide parameter
-    return getStringValue(StandardCharsets.UTF_8);
   }
 
   @Override

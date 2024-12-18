@@ -20,10 +20,10 @@
 package org.apache.tsfile.read.query.dataset;
 
 import org.apache.tsfile.annotations.TsFileApi;
+import org.apache.tsfile.utils.Binary;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import org.apache.tsfile.utils.Binary;
 
 public interface ResultSet extends AutoCloseable {
 

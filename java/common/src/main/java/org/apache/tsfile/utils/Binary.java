@@ -116,7 +116,7 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
    *
    * @return the total capacity of the byte array, or -1 if the array is null
    */
-  public int getCapacity() {
+  public final int getCapacity() {
     if (this.values == null) {
       return -1;
     }
@@ -131,10 +131,6 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
   public String toString() {
     // use UTF_8 by default since toString do not provide parameter
     return getStringValue(StandardCharsets.UTF_8);
-  }
-
-  public byte[] getValues() {
-    return values;
   }
 
   public Pair<byte[], Integer> getValuesAndLength() {
