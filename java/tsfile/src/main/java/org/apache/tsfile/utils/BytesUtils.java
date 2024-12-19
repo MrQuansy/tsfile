@@ -933,12 +933,40 @@ public class BytesUtils {
   }
 
   public static String parseBlobByteArrayToString(byte[] input) {
+    return parseBlobByteArrayToString(input, 0, input.length);
+  }
+
+  public static String parseBlobByteArrayToString(byte[] input, int offset, int length) {
     StringBuilder hexString = new StringBuilder("0x");
     if (input != null) {
-      for (byte b : input) {
-        hexString.append(String.format("%02x", b));
+      for (int i = offset; i < offset + length; i++) {
+        hexString.append(String.format("%02x", input[i]));
       }
     }
     return hexString.toString();
+  }
+
+  public static boolean byteArrayEquals(
+      byte[] leftValue, int leftLength, byte[] rightValue, int rightLength) {
+    if (leftLength != rightLength) {
+      return false;
+    }
+    for (int i = 0; i < leftLength; i++) {
+      if (leftValue[i] != rightValue[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static int byteArrayHashCode(byte[] values, int length) {
+    if (values == null) return 0;
+
+    int result = 1;
+    for (int i = 0; i < length; i++) {
+      result = 31 * result + values[i];
+    }
+
+    return result;
   }
 }

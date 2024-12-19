@@ -36,7 +36,7 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
   private static final long serialVersionUID = 6394197743397020735L;
   public static final Binary EMPTY_VALUE = new Binary(new byte[0]);
 
-  private byte[] values;
+  byte[] values;
 
   /** if the bytes v is modified, the modification is visible to this binary. */
   public Binary(byte[] v) {
@@ -92,11 +92,31 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
   }
 
   /**
-   * get length.
+   * Gets the actual payload length.
    *
-   * @return length
+   * <p>This method returns the effective length of the data (payload) stored in the byte array. If
+   * the byte array is null, it returns -1. Note that this length may be less than the total
+   * capacity of the byte array.
+   *
+   * @return the actual payload length, or -1 if the byte array is null
    */
   public int getLength() {
+    if (this.values == null) {
+      return -1;
+    }
+    return this.values.length;
+  }
+
+  /**
+   * Gets the total capacity of the byte array.
+   *
+   * <p>This method returns the total capacity of the underlying byte array. If the byte array is
+   * null, it returns -1. Note that the effective payload length (actual valid data) may be smaller
+   * than the total capacity of the array.
+   *
+   * @return the total capacity of the byte array, or -1 if the array is null
+   */
+  public final int getCapacity() {
     if (this.values == null) {
       return -1;
     }
@@ -113,8 +133,8 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
     return getStringValue(StandardCharsets.UTF_8);
   }
 
-  public byte[] getValues() {
-    return values;
+  public Pair<byte[], Integer> getValuesAndLength() {
+    return new Pair<>(values, values.length);
   }
 
   public void setValues(byte[] values) {
@@ -124,5 +144,13 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
   @Override
   public long ramBytesUsed() {
     return INSTANCE_SIZE + sizeOf(values);
+  }
+
+  public long ramShallowBytesUsed() {
+    return INSTANCE_SIZE;
+  }
+
+  public boolean isNull() {
+    return values == null;
   }
 }
