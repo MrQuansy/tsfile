@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 public class BinaryUtils {
-  public static String parseBlobByteArrayToString(Binary input) {
+  public static String parseBinaryToString(Binary input) {
     return BytesUtils.parseBlobByteArrayToString(input.values, 0, input.getLength());
   }
 
@@ -44,5 +44,88 @@ public class BinaryUtils {
 
   public static InputStream wrapToByteStream(Binary binary) {
     return new ByteArrayInputStream(binary.values, 0, binary.getLength());
+  }
+
+  public static boolean binaryToBool(Binary binary) {
+    if (binary.getLength() < 1) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() < 1");
+    }
+    return BytesUtils.bytesToBool(binary.values);
+  }
+
+  public static boolean binaryToBool(Binary binary, int offset) {
+    if (binary.getLength() - offset < 1) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() - offset < 1");
+    }
+    return BytesUtils.bytesToBool(binary.values, offset);
+  }
+
+  public static int binaryToInt(Binary binary) {
+    if (binary.getLength() < 4) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() < 4");
+    }
+    return BytesUtils.bytesToInt(binary.values);
+  }
+
+  public static int binaryToInt(Binary binary, int offset) {
+    if (binary.getLength() - offset < 4) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() - offset < 4");
+    }
+    return BytesUtils.bytesToInt(binary.values, offset);
+  }
+
+  public static long binaryToLong(Binary binary, int numBytes) {
+    if (binary.getLength() < numBytes) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() < nnumBytes");
+    }
+    return BytesUtils.bytesToLong(binary.values, numBytes);
+  }
+
+  public static long binaryToLongFromOffset(Binary binary, int numBytes, int offset) {
+    if (binary.getLength() - offset < numBytes) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() - offset < numBytes");
+    }
+    return BytesUtils.bytesToLong(binary.values, numBytes, offset);
+  }
+
+  public static float binaryToFloat(Binary binary) {
+    if (binary.getLength() < 4) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() < 4");
+    }
+    return BytesUtils.bytesToFloat(binary.values);
+  }
+
+  public static float binaryToFloat(Binary binary, int offset) {
+    if (binary.getLength() - offset < 4) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() - offset < 4");
+    }
+    return BytesUtils.bytesToFloat(binary.values, offset);
+  }
+
+  public static double binaryToDouble(Binary binary) {
+    if (binary.getLength() < 8) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() < 8");
+    }
+    return BytesUtils.bytesToDouble(binary.values);
+  }
+
+  public static double binaryToDouble(Binary binary, int offset) {
+    if (binary.getLength() - offset < 8) {
+      throw new IllegalArgumentException("Invalid input: binary.getLength() - offset < 8");
+    }
+    return BytesUtils.bytesToDouble(binary.values, offset);
+  }
+
+  public static Binary subBinary(Binary binary, int start, int length) {
+    if ((start + length) > binary.getLength()) {
+      return Binary.EMPTY_VALUE;
+    }
+    if (length <= 0) {
+      return Binary.EMPTY_VALUE;
+    }
+
+    byte[] subBytes = new byte[length];
+    System.arraycopy(binary.values, start, subBytes, 0, length);
+    return new Binary(subBytes);
   }
 }

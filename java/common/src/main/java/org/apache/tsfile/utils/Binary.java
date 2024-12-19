@@ -70,7 +70,7 @@ public class Binary implements Comparable<Binary>, Serializable, Accountable {
   }
 
   // avoid overflow
-  protected char getChar(byte[] val, int index) {
+  private char getChar(byte[] val, int index) {
     return (char) (val[index] & 0xff);
   }
 

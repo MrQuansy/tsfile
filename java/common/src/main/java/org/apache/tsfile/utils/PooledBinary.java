@@ -50,6 +50,11 @@ public class PooledBinary extends Binary {
     this.length = values.length;
   }
 
+  public PooledBinary(byte[] v, int length) {
+    super(v);
+    this.length = length;
+  }
+
   public PooledBinary(byte[] v, int length, int arenaIndex) {
     super(v);
     this.length = length;

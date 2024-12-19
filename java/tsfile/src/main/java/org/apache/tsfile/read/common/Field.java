@@ -184,7 +184,7 @@ public class Field {
       case STRING:
         return binaryV.toString();
       case BLOB:
-        return BinaryUtils.parseBlobByteArrayToString(binaryV);
+        return BinaryUtils.parseBinaryToString(binaryV);
       default:
         throw new UnSupportedDataTypeException(dataType.toString());
     }
